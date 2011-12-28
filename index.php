@@ -4,10 +4,16 @@ require_once('config.php');
 require_once('leech.php');
 require_once('leech/pcc111228.php');
 
-
-pcc111228::parse(array(
-	'POST' => array(
-		'tenderName'=>'第五區養護工程',
+echo pcc111228::bite(
+	array(
+		'POST' => array(
+			'tenderName'=>'中文',
+		),
 	),
-));
+	array(
+		'POST' => array(
+			'tenderName' => '地理',
+		),
+	)
+);
 ?>
