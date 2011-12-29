@@ -2,7 +2,7 @@
 
 require_once('config.php');
 require_once('leech.php');
-require_once('leech/pcc111228.php');
+require_once('leech/pcc.php');
 
 echo pcc111228::bite(
 	array(
