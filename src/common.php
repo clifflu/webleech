@@ -12,7 +12,7 @@ require_once(INCPATH.'mapper.php');
 
 /**
  * 載入 template
- * @param string $tpl_name 
+ * @param string $tpl_name
  */
 function tpl($tpl_name) {
 	require(TPLPATH.$tpl_name.'.php');

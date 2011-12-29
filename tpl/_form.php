@@ -1,3 +1,6 @@
+<?php
+global $form;
+?>
 <form id="frm_main" method="get">
 <?php foreach($form as $fi): ?>
 	<label for="<?php echo $fi['code'];?>"><?php echo $fi['name'];?></label>

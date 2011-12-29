@@ -26,12 +26,13 @@ $form = array(
 		'mapper' => 'mapper::css',
 	),
 );
-
+print_r($form);die();
 /*
  * Load Templates
  */
 tpl("header");
 tpl("_form");
+//require (TPLPATH."_form.php");
 //tpl("index");
 tpl("footer");
 
