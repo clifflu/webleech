@@ -1,5 +1,5 @@
 <?php
-requrie('common.php');
+require('common.php');
 
 tpl("header");
 tpl("index");
