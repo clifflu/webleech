@@ -1,44 +1,34 @@
 <?php
 
 /**
- * 對應政府電子採購網 的 擷取與分析
- *
- * $target 格式:
- * 	array(
- * 		[POST] => array(
- * 			[FIELDNAME] => [CONTENT],
- * 		)
- * 	);
- *
- * 常用 FIELDNAME :
- * 		orgName (機關名稱), 
- * 		tenderName (標案名稱)
+ * 政府電子採購網, 2011/12/29 版本
  */
-class pcc_111228 extends leech {
+class pcc_111229 extends leech {
 	// ==============================================================
-	// Overrides
+	// Must Override
+	// 衍生類別需覆蓋或實作下列參數或函式
 	// ==============================================================
 
-	/** 檔案版本 * */
-	static protected $VERSION = '111228';
+	/** @var string 檔案版本 */
+	static protected $VERSION = '111229';
 
-	/** 來源分頁資訊 */
+	/** @var string 來源分頁資訊 */
 	static protected $PAGINATION = array(
 		'METHOD' => 'GET',
 		'NAME' => 'pageIndex',
-);
+	);
 
-/** 來源網址 */
+	/** @var string 來源網址 */
 	static protected $BASE_URI = "http://web.pcc.gov.tw/tps/pss/tender.do";
 
-	/** 預設參數 - GET */
-static protected $BASE_GET = array(
+	/** @var array string=>string 預設參數 - GET */
+	static protected $BASE_GET = array(
 		"searchMode" => "common",
 		"searchType" => "advance",
 		"pageIndex" => 1, // 頁數
 	);
 
-	/** 預設參數 - POST */
+	/** @var array string=>string 預設參數 - POST */
 	static protected $BASE_POST = array(
 		"method" => "search",
 		"searchMethod" => "true",
@@ -70,58 +60,16 @@ static protected $BASE_GET = array(
 		"isReConstruct" => "",
 		"radReConstruct" => "",
 	);
-	
-	// ==============================================================
-	// Utilities
-	// ==============================================================
-
-	public static function init() {
-		// 預設值為 僅顯示當日上架標案
-		self::$BASE_POST['tenderStartDate'] = (date("y") + 89) . date("/m/d");
-		self::$BASE_POST['tenderEndDate'] = (date("y") + 89) . date("/m/d");
-	}
 
 	/**
-	 * Turns meta row into primary key
-	 * @param array $row
-	 * @return mixed
+	 * 解析 html 結果
+	 * 如果結果應包含多頁, 但本次 $target 只包含其中一頁的話, 
+	 * 需在回傳值中定義 $meta['pages']
+	 * 
+	 * @param string $html
+	 * @return array $meta
 	 */
-	protected static function _pk_from_row($row) {
-		if (is_array($row)) $row = $row[2];
-		$hit = preg_match('/primaryKey=(\d*)/', $row, $matches);
-		if ($hit > 0) {
-			return $matches[1];
-		} else {
-			return false;
-		}
-
-	}
-	
-	// ==============================================================
-	// Abstract Functions
-	// ==============================================================
-
-	protected static function _uniquify($meta) {
-
-		$new_tbl = array();
-		$key_arr = array();
-		
-		foreach($meta['table'] as $row) {
-			$pk = static::_pk_from_row($row);
-			if ($pk !== false) {
-				if (isset($key_arr[$pk])) {
-					continue;
-				} else {
-					$key_arr[$pk] = true;
-				}
-			}
-			$new_tbl[] = $row;
-		}
-		$meta['table'] = $new_tbl;
-		return $meta;
-	}
-
-	protected static function _extract($html) {
+	protected static function extract($html) {
 
 		// 輸出參數
 		$meta = array();
@@ -135,7 +83,7 @@ static protected $BASE_GET = array(
 		$dom_table = $tags->item(0);
 
 		if (!is_object($dom_table)) {
-			return array('table'=>array());
+			return array('table' => array());
 		}
 
 		$table = array();
@@ -148,13 +96,13 @@ static protected $BASE_GET = array(
 			foreach ($tr->childNodes as $td) {
 				if ($td->nodeName != 'td')
 					continue;
-				
+
 				if (trim($td->textContent) == '找不到任何資料') {
 					// 本次查詢無結果, 先當作本行空白處理
 					$row = null;
 					break;
 				}
-				
+
 				$doc = new DOMDocument;
 				$doc->appendChild($doc->importNode($td, true));
 				static::update_anchor($doc);
@@ -182,11 +130,43 @@ static protected $BASE_GET = array(
 
 			$pages = self::$PAGINATION;
 			$pages['VALUE'] = $parr;
-			
+
 			$meta['pages'] = $pages;
 		}
 
 		return $meta;
+	}
+
+	// ==============================================================
+	// May Override
+	// 衍生類別可以透過覆蓋這些函式來設定行為
+	// ==============================================================
+
+	/**
+	 * Bootstrap function, 實作此函式以觸發自動執行事件
+	 */
+	public static function init() {
+		// 預設值為 僅顯示當日上架標案
+		static::$BASE_POST['tenderStartDate'] = (date("y") + 89) . date("/m/d");
+		static::$BASE_POST['tenderEndDate'] = (date("y") + 89) . date("/m/d");
+	}
+
+	/**
+	 * 自 $meta 列中產生其 primary key
+	 * 建議各衍生物件覆蓋此方法
+	 * 
+	 * @param array $row
+	 * @return mixed primary key
+	 */
+	protected static function pk_from_row($row) {
+		if (is_array($row))
+			$row = $row[2];
+		$hit = preg_match('/primaryKey=(\d*)/', $row, $matches);
+		if ($hit > 0) {
+			return $matches[1];
+		} else {
+			return false;
+		}
 	}
 
 }
