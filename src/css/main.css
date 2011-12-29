@@ -7,6 +7,14 @@ div {
 	padding: 5px;
 }
 
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	font-size: 1.2em;
+}
+
 #wrapper {
 	width:1024px;
 	margin: auto;
@@ -39,14 +47,20 @@ label {
 }
 
 #main {
-	width:730px;
+	width: 730px;
 	margin: 15px 245px 15px 15px;
+	height: 600px;
+	overflow: auto;
 }
 
 .usage p {
 	margin-left:20px;
 	font-size:90%;
 	color:#444444;
+}
+
+#result {
+	font-size: 90%;
 }
 
 .clear {
