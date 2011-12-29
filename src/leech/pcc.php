@@ -112,8 +112,10 @@ class pcc111228 extends leech {
 			foreach ($tr->childNodes as $td) {
 				if ($td->nodeName != 'td')
 					continue;
+				
 				$doc = new DOMDocument;
 				$doc->appendChild($doc->importNode($td, true));
+				static::update_anchor($doc);
 				$row[] = html_entity_decode($doc->saveHTML(), ENT_NOQUOTES, 'UTF-8');
 			}
 			$table[] = $row;

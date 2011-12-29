@@ -114,6 +114,8 @@ abstract class leech {
 
 	/**
 	 * 送出 http request, 取得 html
+	 * @param array $target
+	 * @return string html
 	 */
 	protected static function _fetch($target) {
 
@@ -134,8 +136,9 @@ abstract class leech {
 
 	/**
 	 * 將 $meta_arr[]['table'] 含有的所有資訊，整理為單一陣列 $meta
-	 *
-	 * @param $meta_arr array array of meta
+	 * 無視 $meta['table'] 以外的部份
+	 * 
+	 * @param $meta_arr array array of meta[]
 	 * @return array meta
 	 */
 	protected static function _merge($meta_arr) {
@@ -186,6 +189,8 @@ abstract class leech {
 	/**
 	 * 將陣列轉換成 post or get 格式的文字
 	 * 接受任意數量的 陣列 輸入, 越右邊的變數會蓋過左邊的
+	 * @param array varname => vardata
+	 * @return string HTTP 格式的資料字串
 	 */
 	public static function requestify() {
 		$srcarr = array();
@@ -205,10 +210,19 @@ abstract class leech {
 
 	/**
 	 * 更新 DOM tree 中的 <a href> 屬性
+	 * @param DOMDocument $doc
+	 * @param DOMNode $node 
 	 * @todo
 	 */
-	protected static function update_anchor(DOMDocument $doc, DOMNode $node) {
+	protected static function update_anchor(DOMDocument $doc) {
+		$xpath = new DOMXPath($doc);
+		$tags = $xpath->query('//a[@href]');
 		
+		foreach($tags as $tag) {
+			print_r($tag->textContent);
+		}
+		
+		die('update');
 	}
 
 	/**
