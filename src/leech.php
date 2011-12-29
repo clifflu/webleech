@@ -208,21 +208,44 @@ abstract class leech {
 		return join('&', $arr);
 	}
 
+protected static function uri_path() {
+	return dirname(static::$BASE_URI).'/';
+}
+
+protected static function uri_root() {
+	$arr = parse_url(static::$BASE_URI);
+	return $arr['scheme'].'://'.$arr['host'];
+}
+
 	/**
 	 * 更新 DOM tree 中的 <a href> 屬性
 	 * @param DOMDocument $doc
-	 * @param DOMNode $node 
-	 * @todo
 	 */
 	protected static function update_anchor(DOMDocument $doc) {
 		$xpath = new DOMXPath($doc);
-		$tags = $xpath->query('//a[@href]');
+		$tags = $xpath->query('//@href');
+		
+		$uri_path = static::uri_path();
+		$uri_root = static::uri_root();
 		
 		foreach($tags as $tag) {
-			print_r($tag->textContent);
+			$uri = $tag->textContent;
+
+			if (preg_match("/^https?:\/\//",$uri)) {
+				// complete uri, do nothing
+				;
+			} elseif (preg_match("/^\//",$uri)) {
+				// absolute path
+				$uri = $uri_root.$uri;
+			} else {
+				// relative path
+				$uri = $uri_path.$uri;
+			}
+
+			$DN_uri = new DOMText($uri);
+			$tag->removeChild($tag->firstChild);
+			$tag->appendChild($DN_uri);
 		}
-		
-		die('update');
 	}
 
 	/**
