@@ -1,10 +1,8 @@
 <?php
 
 require_once('config.php');
-require_once('leech.php');
-require_once('leech/pcc111228.php');
 
-echo pcc111228::bite(
+echo pcc::bite(
 	array(
 		'POST' => array(
 			'tenderStartDate' => '100/12/28',
@@ -13,6 +11,11 @@ echo pcc111228::bite(
 		),
 	),
 	array(
+	        'POST' => array(
+			            'tenderName'=>'中文',
+						        ),
+								    ),
+	array(
 		'POST' => array(
 			'tenderStartDate' => '100/12/28',
 			'tenderEndDate' => '100/12/28',
@@ -20,4 +23,6 @@ echo pcc111228::bite(
 		),
 	)
 );
+
+echo pcc::class_info();
 ?>
