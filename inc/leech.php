@@ -9,6 +9,9 @@ abstract class leech {
 	// Overrides
 	// ==============================================================
 
+	/** @var string 物件名稱 */
+	static protected $CLASSNAME = 'default';
+
 	/** @var string 檔案版本 * */
 	static protected $VERSION = '111228';
 
@@ -76,7 +79,7 @@ abstract class leech {
 		else
 			$meta = $meta_arr[0];
 
-		return static::_html($meta);
+		return static::_html(static::_uniquify($meta));
 	}
 
 	// ==============================================================
@@ -109,7 +112,7 @@ abstract class leech {
 			$meta = static::_merge($meta_arr);
 		}
 
-		return $meta;
+		return static::_uniquify($meta);
 	}
 
 	/**
@@ -263,7 +266,7 @@ protected static function uri_root() {
 	 * @return string
 	 */
 	public static function class_info() {
-		return "解析器 " . __CLASS__ . " (版本: " . static::$VERSION . ")";
+		return "解析器 " . static::$CLASSNAME . " ( 版本: " . static::$VERSION . " )";
 	}
 
 }

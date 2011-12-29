@@ -26,13 +26,13 @@ class pcc_111228 extends leech {
 	static protected $PAGINATION = array(
 		'METHOD' => 'GET',
 		'NAME' => 'pageIndex',
-	);
+);
 
-	/** 來源網址 */
+/** 來源網址 */
 	static protected $BASE_URI = "http://web.pcc.gov.tw/tps/pss/tender.do";
 
 	/** 預設參數 - GET */
-	static protected $BASE_GET = array(
+static protected $BASE_GET = array(
 		"searchMode" => "common",
 		"searchType" => "advance",
 		"pageIndex" => 1, // 頁數
@@ -72,7 +72,7 @@ class pcc_111228 extends leech {
 	);
 	
 	// ==============================================================
-	// Bootstrap
+	// Utilities
 	// ==============================================================
 
 	public static function init() {
@@ -80,13 +80,45 @@ class pcc_111228 extends leech {
 		self::$BASE_POST['tenderStartDate'] = (date("y") + 89) . date("/m/d");
 		self::$BASE_POST['tenderEndDate'] = (date("y") + 89) . date("/m/d");
 	}
+
+	/**
+	 * Turns meta row into primary key
+	 * @param array $row
+	 * @return mixed
+	 */
+	protected static function _pk_from_row($row) {
+		if (is_array($row)) $row = $row[2];
+		$hit = preg_match('/primaryKey=(\d*)/', $row, $matches);
+		if ($hit > 0) {
+			return $matches[1];
+		} else {
+			return false;
+		}
+
+	}
 	
 	// ==============================================================
 	// Abstract Functions
 	// ==============================================================
 
 	protected static function _uniquify($meta) {
+
+		$new_tbl = array();
+		$key_arr = array();
 		
+		foreach($meta['table'] as $row) {
+			$pk = static::_pk_from_row($row);
+			if ($pk !== false) {
+				if (isset($key_arr[$pk])) {
+					continue;
+				} else {
+					$key_arr[$pk] = true;
+				}
+			}
+			$new_tbl[] = $row;
+		}
+		$meta['table'] = $new_tbl;
+		return $meta;
 	}
 
 	protected static function _extract($html) {
@@ -102,6 +134,10 @@ class pcc_111228 extends leech {
 		$tags = $xpath->query('//div[@id = "print_area"]/table');
 		$dom_table = $tags->item(0);
 
+		if (!is_object($dom_table)) {
+			return array('table'=>array());
+		}
+
 		$table = array();
 		foreach ($dom_table->childNodes as $tr) {
 			if ($tr->nodeName != 'tr')
@@ -113,12 +149,19 @@ class pcc_111228 extends leech {
 				if ($td->nodeName != 'td')
 					continue;
 				
+				if (trim($td->textContent) == '找不到任何資料') {
+					// 本次查詢無結果, 先當作本行空白處理
+					$row = null;
+					break;
+				}
+				
 				$doc = new DOMDocument;
 				$doc->appendChild($doc->importNode($td, true));
 				static::update_anchor($doc);
 				$row[] = html_entity_decode($doc->saveHTML(), ENT_NOQUOTES, 'UTF-8');
 			}
-			$table[] = $row;
+			if (@$row && is_array($row) && count($row) > 0)
+				$table[] = $row;
 		}
 
 		// parse page info on the last row
