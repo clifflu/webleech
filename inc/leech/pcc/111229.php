@@ -69,7 +69,7 @@ class pcc_111229 extends leech {
 	 * @param string $html
 	 * @return array $meta
 	 */
-	protected static function extract($html) {
+	protected static function _extract($html) {
 
 		// 輸出參數
 		$meta = array();

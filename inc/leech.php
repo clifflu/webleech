@@ -63,7 +63,7 @@ abstract class leech {
 	 * @param string $html
 	 * @return array $meta
 	 */
-	protected abstract static function extract($html);
+	protected abstract static function _extract($html);
 
 	// ==============================================================
 	// May Override
@@ -122,7 +122,7 @@ abstract class leech {
 			static::init();
 
 		$meta_arr = array();
-		foreach ($target_arr() as $target)
+		foreach ($target_arr as $target)
 			$meta_arr[] = static::_digest($target);
 
 		if (count($meta_arr) > 1)
