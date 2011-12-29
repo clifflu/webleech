@@ -34,6 +34,7 @@ h2 {
 	float:right;
 	width:200px;
 	margin:15px;
+	border-left: 1px gray solid;
 }
 
 label {
