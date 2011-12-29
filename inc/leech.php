@@ -65,6 +65,23 @@ abstract class leech {
 	 */
 	protected abstract static function _extract($html);
 
+	/**
+	 * 傳回解析器資訊陣列，其型態為
+	 * array(
+	 *		'src'=>array(
+	 *			'name'=>'政府電子採購網',
+	 *			'uri'=>static::$BASE_URI,
+	 *			'comment'=>'',
+	 *		),
+	 *		'self'=>array(
+	 *			'name'=>static::$CLASSNAME,
+	 *			'version'=>static::$VERSION,
+	 *		),
+	 *	);
+	 * @return array
+	 */
+	protected abstract static function info();
+
 	// ==============================================================
 	// May Override
 	// 衍生類別可以透過覆蓋這些函式來設定行為

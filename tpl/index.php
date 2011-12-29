@@ -1,3 +1,7 @@
 <?php
+/**
+ * fits to pcc
+ */
 ?>
-index.php
+
+<?php echo pcc::class_info();?>

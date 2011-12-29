@@ -14,5 +14,18 @@ class pcc extends pcc_111229 {
 	/** @var string 物件名稱 */
 	static protected $CLASSNAME = __CLASS__;
 
+	static function info() {
+		return array(
+			'src'=>array(
+				'name'=>'政府電子採購網',
+				'uri'=>static::$BASE_URI,
+				'comment'=>'',
+			),
+			'self'=>array(
+				'name'=>static::$CLASSNAME,
+				'version'=>static::$VERSION,
+			),
+		);
+	}
 }
 ?>
