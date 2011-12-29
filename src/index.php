@@ -23,7 +23,7 @@ $form = array(
 		'name' => '標案名稱',
 		'code' => 'tenderName',
 		'default' => '',
-		'exp' => '民國年(3位)/月(2位)/日(2位)',
+		'exp' => '使用半形逗點分隔, 逗點前後的空白字元會被忽略',
 		'mapper' => 'mapper::css',
 	),
 );
@@ -37,6 +37,9 @@ if (count($_REQUEST) >= count($form)) {
 
 	foreach($_REQUEST as $key => $value) {
 		if (!isset($form[$key])) continue;
+
+		// 將使用者輸入值蓋過預設值, 才會自動帶入表單
+		$form[$key]['default'] = $value;
 		
 		if (isset($form[$key]['mapper']))
 			$value = call_user_func($form[$key]['mapper'],$value);

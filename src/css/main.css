@@ -1,0 +1,60 @@
+a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+div {
+	padding: 5px;
+}
+
+#wrapper {
+	width:1024px;
+	margin: auto;
+}
+
+#header {
+	border-bottom:1px black solid;
+}
+
+#siteexp {
+	font-size:80%;
+	color:#888888;
+	margin-left:45px;
+}
+
+#sidebar {
+	float:right;
+	width:200px;
+	margin:15px;
+}
+
+label {
+	font-weight: bold;
+	font-size: 90%;
+}
+
+.exp {
+	font-size:80%;
+	color: #888888;
+}
+
+#main {
+	width:730px;
+	margin: 15px 245px 15px 15px;
+}
+
+.usage p {
+	margin-left:20px;
+	font-size:90%;
+	color:#444444;
+}
+
+.clear {
+	clear:both;
+}
+
+#footer {
+	font-size:80%;
+	text-align: center;
+	padding:5px 30px;
+}

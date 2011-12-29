@@ -219,9 +219,14 @@ abstract class leech {
 			return $tgt_arr;
 		}
 
+		$handle = static::var_belong($arr_name);
 		foreach($query[$arr_name] as $v) {
-			
+			$target = array('POST'=>$tpl_post, 'GET'=>$tpl_get);
+			$target[$handle][$arr_name] = $v;
+			$tgt_arr[] = $target;
 		}
+
+		return $tgt_arr;
 	}
 
 	// ==============================================================
