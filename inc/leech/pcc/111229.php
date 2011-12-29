@@ -18,6 +18,8 @@ abstract class pcc_111229 extends leech {
 		'NAME' => 'pageIndex',
 	);
 
+	static protected $MANIP_URI = "http://web.pcc.gov.tw/tps/pss/tender.do?method=goSearch&searchMode=common&searchType=advance&searchTarget=TPAM";
+
 	/** @var string 來源網址 */
 	static protected $BASE_URI = "http://web.pcc.gov.tw/tps/pss/tender.do";
 

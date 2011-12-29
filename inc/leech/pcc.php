@@ -19,6 +19,7 @@ class pcc extends pcc_111229 {
 			'src'=>array(
 				'name'=>'政府電子採購網',
 				'uri'=>static::$BASE_URI,
+				'manip'=>static::$MANIP_URI,
 				'comment'=>'',
 			),
 			'self'=>array(

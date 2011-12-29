@@ -24,7 +24,9 @@ class mapper {
 			$tmp = trim($tmp);
 			if ($tmp)$out[] = $tmp;
 		}
-		return out;
+		if (count($out)==0) return '';
+		if (count($out)==1) return $out[0];
+		return $out;
 	}
 }
 ?>

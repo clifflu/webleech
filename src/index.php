@@ -1,9 +1,10 @@
 <?php
 require('common.php');
 
+/*
+ * Presets
+ */
 $leech = "pcc";
-
-$info = $leech::info();
 
 $form = array(
 	'tenderStartDate' => array(
@@ -26,14 +27,43 @@ $form = array(
 		'mapper' => 'mapper::css',
 	),
 );
-print_r($form);die();
+
+/*
+ * Parse Request
+ */
+if (count($_REQUEST) >= count($form)) {
+	// got user input, extract query from request
+	$query = array();
+
+	foreach($_REQUEST as $key => $value) {
+		if (!isset($form[$key])) continue;
+		
+		if (isset($form[$key]['mapper']))
+			$value = call_user_func($form[$key]['mapper'],$value);
+		
+		$query[$key] = $value;
+	}
+
+	foreach($form as $key => $value) {
+		if (!isset($query[$key]) && isset($value['default'])) 
+			$query[$key] = $value['default'];
+	}
+
+	$target_arr = $leech::target_from_query($query);
+	
+	$html = $leech::bite_arr($target_arr);
+}
+
 /*
  * Load Templates
  */
 tpl("header");
-tpl("_form");
-//require (TPLPATH."_form.php");
-//tpl("index");
+tpl("sidebar");
+if (@$html) {
+	tpl("result");
+} else {
+	tpl("usage");
+}
 tpl("footer");
 
 ?>

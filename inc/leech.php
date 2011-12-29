@@ -46,6 +46,9 @@ abstract class leech {
 	/** @var string 來源分頁資訊 */
 	static protected $PAGINATION = null;
 
+	/** @var string 來源操作頁面 */
+	static protected $MANIP_URI;
+
 	/** @var string 來源網址 */
 	static protected $BASE_URI;
 
@@ -70,6 +73,7 @@ abstract class leech {
 	 * array(
 	 *		'src'=>array(
 	 *			'name'=>'政府電子採購網',
+	 *			'manip'=>static::$MANIP_URI,
 	 *			'uri'=>static::$BASE_URI,
 	 *			'comment'=>'',
 	 *		),
@@ -160,6 +164,64 @@ abstract class leech {
 	 */
 	public static function bite() {
 		return static::bite_arr(func_get_args());
+	}
+
+	public static function var_belong($varname) {
+		if (isset(static::$BASE_POST[$varname])) {
+			return 'POST';
+		} elseif (isset(static::$BASE_GET[$varname])) {
+			return 'GET';
+		} else {
+			return '';
+		}
+	}
+
+	/**
+	 * 將使用者傳來的 query 轉換成 $target_arr
+	 * @todo 目前只接受一個維度是陣列
+	 */
+	public static function target_from_query($query) {
+		// 變數名稱, 陣列數量檢查
+		$arr_name = '';
+		$tpl_post = array();
+		$tpl_get = array();
+
+		foreach($query as $key=>$value) {
+			if (static::var_belong($key)=='') {
+				echo __CLASS__." : 欄位名稱錯誤";
+				print_r($query);
+				die();
+			}
+			if (is_array($value)) {
+				if ($arr_name == '') {
+					$arr_name = $key;
+				} else {
+					echo __CLASS__." : 變數型態錯誤, 只能有一個是陣列";
+					print_r($query);
+					die();
+				}
+			} else {
+				if (static::var_belong($key)=='GET') {
+					$tpl_get[$key] = $value;
+				} else {
+					$tpl_post[$key] = $value;
+				}
+			}
+			
+		}
+
+		// print_r(array($arr_name, $tpl_post, $tpl_get));die();
+
+		// build $target
+		$tgt_arr = array();
+		if ($arr_name == '') {
+			$tgt_arr[] = array('POST'=>$tpl_post, 'GET'=>$tpl_get);
+			return $tgt_arr;
+		}
+
+		foreach($query[$arr_name] as $v) {
+			
+		}
 	}
 
 	// ==============================================================
