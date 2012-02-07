@@ -1,11 +1,11 @@
 <?php
 
-include 'pcc/111229.php';
+include 'pcc/120207.php';
 
 /**
  * 政府電子採購網
  */
-class pcc extends pcc_111229 {
+class pcc extends pcc_120207 {
 	// ==============================================================
 	// Must Override
 	// 衍生類別需覆蓋或實作下列參數或函式
