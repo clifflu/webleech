@@ -66,7 +66,9 @@ abstract class leech {
 	 * @param string $html
 	 * @return array $meta
 	 */
-	protected abstract static function _extract($html);
+	protected static function _extract($html) {
+		throw new Exception('Override Me !');
+	}
 
 	/**
 	 * 傳回解析器資訊陣列，其型態為
@@ -84,7 +86,9 @@ abstract class leech {
 	 *	);
 	 * @return array
 	 */
-	protected abstract static function info();
+	protected static function info() {
+		throw new Exception('Override Me !');
+	}
 
 	// ==============================================================
 	// May Override
